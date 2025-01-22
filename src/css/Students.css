@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+p {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+h3 {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.table {
+    background-color: rgb(255, 255, 255);
+    flex-direction: column;
+    display: flex;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.table th {
+    padding: 1rem;
+    text-align: center;
+}
+
+.table td.noText {
+    text-align: center;
+    font-size: small;
+}
+
+.table td.text {
+    padding-left: 10px;
+    text-align: justify;
+    font-size: small;
+    line-height: 1;
+}
+
+.table tr {
+    height: 45px;
+}
+
+.table-row-odd {
+    background-color: #fff;
+}
+
+.table-row-even {
+    background-color: #f0f0f0;
+}
+
+.table div {
+    display: flex;
+    justify-content: center;
+}
+
+.chart-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.charts-container{
+    display: flex;
+    justify-content: space-around;
+    padding: 0 8rem;
+}
+
+.chaptersDropdown select {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.logout {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    margin-right: 0.5rem;
+    margin-top: 0.3rem;
+    cursor: pointer;
+}
+
+.studentInfoContainer{
+    background-color: #fff;
+    width: 60%;
+    height: 20px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    justify-content: space-between;
+    display: flex;
+    padding: 10px;
+}
+
+.column{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
