@@ -5,119 +5,110 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, ChartDataLabels, Title, Tooltip, Legend);
 
-const calculateStadistics = (data,numberQuestions) => {
-    Object.entries(data).map(entry => {
-        const sumPopulation = entry[1].population.reduce((p, c) => p + c, 0);
-        entry[1].mean = sumPopulation/entry[1].populationSize;
+/**
+ * Inicializa la estructura de estadísticas para cada capítulo/pregunta.
+ */
+const initData = () => ({
+    meanCorrect: 0.0,
+    meanIncorrect: 0.0,
+    standardDeviationCorrect: undefined,
+    standardDeviationIncorrect: undefined,
+    populationSize: 0,
+    populationCorrect: [],
+    populationIncorrect: [],
+});
 
-        if (entry[1].populationSize > 2){
-            const variance = entry[1].population.map(x => Math.pow(x - entry[1].mean, 2)).reduce((p, c) => p + c) / (entry[1].populationSize - 1);
-            entry[1].standarDesviation = Math.sqrt(variance);
-        }
-    });
-
-    return data;
+/**
+ * Calcula la media de un conjunto de valores.
+ */
+const calculateMean = (values) => {
+    if (values.length === 0) return 0;
+    return values.reduce((sum, val) => sum + val, 0) / values.length;
 };
 
-const attemptData = (sessions, domain, data) => {
-    sessions.forEach(session => {
-        const domainType = domain.chapters !== undefined ? 'chapters' : 'questions';
-        if (domainType === 'chapters'){
-            const id = session.chapter_id;
+/**
+ * Calcula la desviación estándar de un conjunto de valores.
+ */
+const calculateStandardDeviation = (values, mean) => {
+    if (values.length < 2) return undefined;
+    const variance = values.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / (values.length - 1);
+    return Math.sqrt(variance);
+};
 
-            data[id].populationSize++;
-            data[id].population.push(session.scores.length/domain.chapters.find(chapter => chapter.id === id).questions.length);
-        }
-        else {
-            const attempts = {};
+/**
+ * Procesa los datos de intentos y tiempo por capítulo/pregunta.
+ */
+const processData = (sessions, domain, rangeType) => {
+    const domainType = domain.chapters ? 'chapters' : 'questions';
+    const statistics = {};
 
-            session.scores.forEach(score => {
-                const id = score.question_id;
-                if (attempts[id] === undefined){
-                    attempts[id] = 0;
-                }
-
-                attempts[id]++;
-            });
-
-            Object.entries(attempts).map(entry => {
-                const id = entry[0];
-                
-                data[id].populationSize++;
-                data[id].population.push(entry[1]);
-            });
-        }
+    domain[domainType].forEach(item => {
+        statistics[item.id] = initData();
     });
 
-    return calculateStadistics(data);
-}
-
-const timeData = (sessions, domainType, data) => {
     sessions.forEach(session => {
         session.scores.forEach(score => {
             const id = domainType === 'chapters' ? session.chapter_id : score.question_id;
+            const entry = statistics[id];
 
-            data[id].populationSize++;
-            data[id].population.push(score.seconds);
+            entry.populationSize++;
+
+            if (score.is_correct) {
+                if (rangeType === 'time') {
+                    entry.populationCorrect.push(score.seconds);
+                } else {
+                    entry.populationCorrect.push(score.attempt);
+                }
+            } else {
+                if (rangeType === 'time') {
+                    entry.populationIncorrect.push(score.seconds);
+                } else {
+                    entry.populationIncorrect.push(score.attempt);
+                }
+            }
         });
     });
 
-    return calculateStadistics(data);
-}
-
-const calculateData = (sessions, domain, rangeType) => {
-    const meanData = {};
-
-    const initData = () => ({
-        mean: 0.0,
-        standarDesviation: undefined,
-        populationSize: 0,
-        population: [],
-    });
-
-    const domainType = domain.chapters !== undefined ? 'chapters' : 'questions';
-
-    domain[domainType].forEach(x => {
-        meanData[x.id] = initData();
-    });
- 
-    rangeType === 'time' ? timeData(sessions, domainType, meanData) : attemptData(sessions, domain, meanData);
-    
-    return meanData;
+    return Object.entries(statistics).map(([id, entry]) => ({
+        id: parseInt(id),
+        meanCorrect: calculateMean(entry.populationCorrect),
+        meanIncorrect: calculateMean(entry.populationIncorrect),
+        standardDeviationCorrect: calculateStandardDeviation(entry.populationCorrect, entry.meanCorrect),
+        standardDeviationIncorrect: calculateStandardDeviation(entry.populationIncorrect, entry.meanIncorrect),
+        populationSize: entry.populationSize,
+    }));
 };
 
-function MeanChart({  domain, barSessions , lineSessions }){
-    const [barData, handleBarData] = useState({});
-    const [lineData, handleLineData] = useState({});
-    const [xValues, handleXvalues] = useState([]);
-    const [xAxisLabel, handleXAxisLabel] = useState('');
-    const [rangeType, handleRangeType] = useState('time');
-    
+function MeanChart({ domain, barSessions, lineSessions }) {
+    const [barData, setBarData] = useState([]);
+    const [lineData, setLineData] = useState([]);
+    const [xValues, setXValues] = useState([]);
+    const [xAxisLabel, setXAxisLabel] = useState('');
+    const [rangeType, setRangeType] = useState('time');
+
     useEffect(() => {
-        if (domain != null) {
-            const isChapterFiltered = domain.chapters == undefined;
+        if (domain) {
+            const isChapterFiltered = domain.chapters === undefined;
 
             if (isChapterFiltered) {
-                handleXvalues(domain.questions.map((q) => 'P' + q.number));
-                handleXAxisLabel('preguntas');
-            }
-            else {
-                handleXvalues(domain.chapters.map((c) => c.name.split(' ')));
-                handleXAxisLabel('capitulos');
+                setXValues(domain.questions.map((q) => 'P' + q.number));
+                setXAxisLabel('preguntas');
+            } else {
+                setXValues(domain.chapters.map((c) => c.name.split(' ')));
+                setXAxisLabel('dimensión');
             }
         }
     }, [domain]);
 
     useEffect(() => {
-        if (barSessions != null && domain != null) {
-            handleBarData(calculateData(barSessions, domain, rangeType));
-            console.debug(barData);
+        if (barSessions && domain) {
+            setBarData(processData(barSessions, domain, rangeType));
         }
     }, [barSessions, rangeType]);
 
     useEffect(() => {
-        if (lineSessions != null & domain != null) {
-            handleLineData(calculateData(lineSessions, domain, rangeType));
+        if (lineSessions && domain) {
+            setLineData(processData(lineSessions, domain, rangeType));
         }
     }, [lineSessions, rangeType]);
 
@@ -125,60 +116,57 @@ function MeanChart({  domain, barSessions , lineSessions }){
         labels: xValues,
         datasets: [
             {
-                label: 'mean',
-                data: Object.values(barData).map(d => d.mean),
-                backgroundColor: 'rgba(241, 245, 0, 0.65)',
-                borderColor: 'rgb(154, 156, 0)',
+                label: 'Correctas',
+                data: barData.map(d => d.meanCorrect),
+                backgroundColor: 'rgba(32, 236, 13, 0.65)',
+                borderColor: 'rgb(0, 156, 0)',
                 borderWidth: 2,
                 order: 1,
             },
             {
-                label: 'mean line',
-                data: Object.values(lineData).map(d => d.mean),
+                label: 'Incorrectas',
+                data: barData.map(d => d.meanIncorrect),
+                backgroundColor: 'rgba(250, 9, 9, 0.65)',
+                borderColor: 'rgb(151, 18, 0)',
+                borderWidth: 2,
+                order: 1,
+            },
+            ...(lineData.length > 0 ? [{
+                label: 'Promedio general',
+                data: lineData.map(d => (d.meanCorrect + d.meanIncorrect) / 2),
                 borderColor: 'rgb(73, 1, 190)',
+                borderWidth: 1.5,
                 order: 0,
                 type: 'line',
-            },
-            {
-                label: 'standard desviation',
-                data: Object.values(barData).map(d => d.standarDesviation),
-                hidden: true,
-            },
-            {
-                label: 'total',
-                data: Object.values(barData).map(d => d.populationSize),
-                hidden: true,
-            }
+            }] : [])
         ]
     };
-    const titleOptions = {
-            display: true,
-            text: (rangeType === 'time' ? 'Tiempo' : 'Intentos') + ' promedio por ' + xAxisLabel,
-        }
-
-    const legendOptions = {
-        display: false,
-    };
-
+    
     const tooltipOptions = {
         displayColors: false,
         callbacks: {
             title: (context) => {
-                let index = context[0].dataIndex;
-                let datasets = context[0].chart.data.datasets;
-
-                let totalScore = datasets[3].data[index];
-
-                return 'Total: ' + totalScore;
+                // 🔹 Muestra el total solo en las barras
+                if (context[0].dataset.type !== 'line') {
+                    return `Total: ${barData[context[0].dataIndex]?.populationSize || 0}`;
+                }
             },
             label: (context) => {
                 let index = context.dataIndex;
-                let datasets = context.chart.data.datasets;
-
-                let standarDesviation = datasets[2].data[index];
-                
-                let text = standarDesviation !== undefined ?  standarDesviation.toFixed(2) : 'Indefinido';
-                return '\u03c3: ' + text;
+                let value = context.raw;
+    
+                // 🔹 Solo muestra el tooltip en el gráfico de línea
+                if (context.dataset.type === 'line') {
+                    return `Promedio General: ${value.toFixed(2)}`;
+                }
+    
+                // 🔹 Tooltip para las barras con desviación estándar
+                let stdCorrect = barData[index]?.standardDeviationCorrect;
+                let stdIncorrect = barData[index]?.standardDeviationIncorrect;
+                return [
+                    `σ Correcto: ${stdCorrect ? stdCorrect.toFixed(2) : 'N/A'}`,
+                    `σ Incorrecto: ${stdIncorrect ? stdIncorrect.toFixed(2) : 'N/A'}`
+                ];
             },
         }
     };
@@ -186,78 +174,99 @@ function MeanChart({  domain, barSessions , lineSessions }){
     const dataLabelOptions = {
         font: {
             weight: 'bold',
+            size: 11,
         },
-
+        offset: -5,
+        color: 'rgb(51, 47, 47)', // Color del texto
+        anchor: 'end', // Posiciona los labels en la parte superior
+        align: 'top', // Asegura que los números aparezcan arriba de la barra
         display: (context) => {
-            let index = context.dataIndex;
-            return context.dataset.data[index] > 0 ;
+            let value = context.dataset.data[context.dataIndex];
+            return value > 0 && context.dataset.type !== 'line'; // Oculta DataLabels de la línea y los valores en 0
         },
-        formatter: (value, context) => {
-            return value.toFixed(2);
-        }
+        formatter: (value) => value.toFixed(2),
+    };
+
+    const legendOptions = {
+        display: true,
+        labels: {
+            filter: (legendItem, chartData) => {
+                // 🔹 Oculta la leyenda de la línea si no hay datos
+                if (legendItem.text === 'Línea Promedio' && lineData.length === 0) {
+                    return false;
+                }
+                return true;
+            }
+        },
+        onClick: () => {}, // 🔹 Deshabilita la interacción con la leyenda
+        onHover: (event) => event.native.target.style.cursor = 'default' // 🔹 Evita cambio de cursor en la leyenda
     };
 
     const optionsChart = {
-
         scales: {
             x: {
-                stacked: true,
                 beginAtZero: true,
                 grid: {
                     display: false,
                 }
             },
             y: {
-                stacked: true,
                 title: {
                     display: true,
-                    text: rangeType === 'time' ? 'Tiempo (S)' : 'N\u00B0 de intentos',
+                    text: rangeType === 'time' ? 'Tiempo (segundos)' : 'Nº de intentos',
                 },
                 grid: {
                     display: false,
                 },
                 ticks: {
                     display: false,
-                }
+                },
             },
         },
         plugins: {
             tooltip: tooltipOptions,
             datalabels: dataLabelOptions,
             legend: legendOptions,
-            title: titleOptions,
+            title: {
+                display: true,
+                text: (rangeType === 'time' ? 'Tiempo' : 'Intentos') + ' promedio por ' + xAxisLabel,
+            },
         },
-  };
+    };
+    
+    
 
-  return (
-    <div className='chart-container'>
-        <div>
-            <label>
-                <input
-                    type='radio'
-                    name='tiempo'
-                    value='time'
-                    checked={rangeType === 'time'}
-                    onChange={e => handleRangeType(e.target.value)}
-                />
-            tiempo
-            </label>
-            <label>
-                <input
-                    type='radio'
-                    name='intentos'
-                    value='attempts'
-                    checked={rangeType === 'attempts'}
-                    onChange={e => handleRangeType(e.target.value)}
-                />
-            intentos
-            </label>
-        </div>   
-        <div>
-            <Bar data={dataChart} options={optionsChart} width={400} height={300}/>
+
+    return (
+        <div className='chart-container'>
+            <div>
+                <label>
+                    <input
+                        type='radio'
+                        name='metric'
+                        value='time'
+                        checked={rangeType === 'time'}
+                        onChange={e => setRangeType(e.target.value)}
+                    />
+                    Tiempo
+                </label>
+                <label>
+                    <input
+                        type='radio'
+                        name='metric'
+                        value='attempts'
+                        checked={rangeType === 'attempts'}
+                        onChange={e => setRangeType(e.target.value)}
+                    />
+                    Intentos
+                </label>
+            </div>   
+            <div>
+                <Bar data={dataChart} options={optionsChart} width={400} height={300}/>
+            </div>
         </div>
-    </div>
-  );
+    );
 };
 
 export default MeanChart;
+

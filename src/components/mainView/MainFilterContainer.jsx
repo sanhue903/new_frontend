@@ -18,7 +18,7 @@ function MainFilterContainer({ mobileAppData , sessions , handleInput , handleDo
 
     useEffect(() => {
         if (sessions !== null && chapterChoice !== null) {
-            if (chapterChoice === 'no') {
+            if (chapterChoice === 'todas') {
                 handleFilteredSessions(sessions);
                 handleDomain(mobileAppData);
                 return;
@@ -30,7 +30,7 @@ function MainFilterContainer({ mobileAppData , sessions , handleInput , handleDo
 
     useEffect(() => {
         if (filteredSessions !== null && sessionChoice !== null) {
-            if (sessionChoice === 'no') {
+            if (sessionChoice === 'todas') {
                 handleInput(filteredSessions);
                 return;
             }

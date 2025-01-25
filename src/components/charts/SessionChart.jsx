@@ -50,7 +50,7 @@ function SessionChart({ sessions }){
     };
     const titleOptions = {
             display: true,
-            text: 'N\u00B0 de sesiones terminadas',
+            text: 'N\u00B0 de sesiones jugadas',
         }
 
     const tooltipOptions = {
@@ -64,10 +64,18 @@ function SessionChart({ sessions }){
         }
     };
 
+    const legendOptions = {
+        display: true,
+        onClick: () => {}, // 🔹 Deshabilita la interacción con la leyenda
+        onHover: (event) => event.native.target.style.cursor = 'default' // 🔹 Evita cambio de cursor en la leyenda
+    };
+
     const dataLabelOptions = {
         font: {
             weight: 'bold',
+            size: 12,
         },
+        color: 'rgb(39, 36, 36)', 
 
         display: (context) => {
             let index = context.dataIndex;
@@ -106,6 +114,7 @@ function SessionChart({ sessions }){
             tooltip: tooltipOptions,
             datalabels: dataLabelOptions,
             title: titleOptions,
+            legend: legendOptions,
             }
     };
 

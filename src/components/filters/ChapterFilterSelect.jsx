@@ -6,7 +6,7 @@ function ChapterFilterSelect({ mobileAppData , handleChoice }) {
 
     useEffect(() => {
         if (mobileAppData != null){
-            handleValue('no');
+            handleValue('todas');
 
             handleOptions(mobileAppData.chapters)
         }
@@ -21,10 +21,10 @@ function ChapterFilterSelect({ mobileAppData , handleChoice }) {
 
     return (
         <div>
-        <label htmlFor="chapter-select">Selecciona un capítulo:</label>
+        <label htmlFor="chapter-select">Dimensión : </label>
         <select id="chapter-select" onChange={(e) => handleChoice(e.target.value)}>
             {/* Opción predeterminada */}
-            <option value="no">No</option>
+            <option value="todas">todas</option>
             {/* Renderizar opciones solo si chapters no es null/undefined */}
             {mobileAppData && options.map((chapter) => (
                 <option key={chapter.id} value={chapter.id}>

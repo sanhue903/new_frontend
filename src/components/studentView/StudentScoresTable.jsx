@@ -1,6 +1,7 @@
 import React, {useEffect , useState} from 'react';
 import x from '../../assets/images/x.png';
 import tick from '../../assets/images/tick.png';
+import { formatDate } from '../utils';
 
 function StudentScoresTable({ mobileAppData , sessions }) {
     const [page, handlePage] = useState(1);
@@ -31,7 +32,8 @@ function StudentScoresTable({ mobileAppData , sessions }) {
    }, [sessions]); 
 
     useEffect( () => {
-        if (sessions !== null) {
+        if (sessions != null) {
+            console.debug(sessions)
             const inferiorLimit = (page-1)*limit;
             const superiorLimit = page*limit;
 
@@ -69,32 +71,42 @@ function StudentScoresTable({ mobileAppData , sessions }) {
               <th>Pregunta</th>
               <th>Respuesta</th>
               <th>Sesión</th>
+              <th>Fecha</th>
               <th>Segundos</th>
-              <th>Intentos</th>
+              <th>N&deg; Intentos</th>
               <th>Correcto</th>
             </tr>
             </thead>
             <tbody>
-            {actualScores.map((score, index) => {
-                const chapter = mobileAppData.chapters.find(chapter => chapter.questions.some(q => q.id === score.question_id));
-                const question = chapter.questions.find(question => question.id === score.question_id);
-                const session = sessions.find(session => session.id === score.session_id)
+            {actualScores.length > 0 ? (
+                actualScores.map((score, index) => {
+                    const chapter = mobileAppData.chapters.find(ch => ch.questions.some(q => q.id === score.question_id));
+                    const question = chapter?.questions.find(q => q.id === score.question_id);
+                    const session = sessions.find(s => s.id === score.session_id);
 
-                return (
-                <tr key={index} className={'table-row-' + (index % 2 == 0 ? 'even' : 'odd')}>
-                    <td className='text' style={{'width' : '10%'}}>{chapter.name}</td>
-                    <td className='text' style={{'width' : '35%'}}>{question.text}</td>
-                    <td className='text' style={{'width' : '35%'}}>{score.answer}</td>
-                    <td className='noText' style={{'width' : '5%'}}>{session.number}</td>
-                    <td className='noText' style={{'width' : '5%'}}>{score.seconds.toFixed(2)}</td>
-                    <td className='noText' style={{'width' : '5%'}}>{score.attempt}</td>
-                    <td className='noText' style={{'width' : '5%'}}>{score.is_correct ? (
-                        <img src={tick} alt="Sí" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />) : (
-                        <img src={x} alt="No" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />
-                  )}
-                  </td>
+                    return (
+                        <tr key={index} className={'table-row-' + (index % 2 === 0 ? 'even' : 'odd')}>
+                            <td className='text' style={{ width: '10%' }}>{chapter?.name || 'N/A'}</td>
+                            <td className='text' style={{ width: '35%' }}>{question?.text || 'N/A'}</td>
+                            <td className='text' style={{ width: '30%' }}>{score.answer}</td>
+                            <td className='noText' style={{ width: '5%' }}>{session?.number || 'N/A'}</td>
+                            <td className='text' style={{ width: '5%' }}>{formatDate(session?.date) || 'N/A'}</td>
+                            <td className='noText' style={{ width: '5%' }}>{score.seconds.toFixed(2)}</td>
+                            <td className='noText' style={{ width: '5%' }}>{score.attempt}</td>
+                            <td className='noText' style={{ width: '5%' }}>
+                                {score.is_correct ? (
+                                    <img src={tick} alt="Sí" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />
+                                ) : (
+                                    <img src={x} alt="No" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />
+                                )}
+                            </td>
+                        </tr>
+                    );
+                })
+            ) : (
+                <tr>
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '10px' }}>No hay datos disponibles</td>
                 </tr>
-                )}
             )}
             </tbody>
         </table>

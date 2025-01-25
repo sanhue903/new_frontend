@@ -49,7 +49,7 @@ function CorrectPercentajeChart({ sessions, domain }){
             }
             else {
                 handleYAxis(domain.chapters.map((c) => c.name.split(' ')));
-                handleYAxisLabel('capitulos');
+                handleYAxisLabel('dimensión');
             }
         }
     }, [domain]);
@@ -88,6 +88,12 @@ function CorrectPercentajeChart({ sessions, domain }){
         text: 'N\u00B0 de respuestas por ' + yAxisLabel,
     }
 
+    const legendOptions = {
+        display: true,
+        onClick: () => {}, // 🔹 Deshabilita la interacción con la leyenda
+        onHover: (event) => event.native.target.style.cursor = 'default' // 🔹 Evita cambio de cursor en la leyenda
+    };
+
     const tooltipOptions = {
         callbacks: {
             title: (context) => {
@@ -114,7 +120,9 @@ function CorrectPercentajeChart({ sessions, domain }){
     const dataLabelOptions = {
         font: {
             weight: 'bold',
+            size: 12,
         },
+        color: 'rgb(51, 47, 47)', 
 
         display: (context) => {
             let index = context.dataIndex;
@@ -151,6 +159,7 @@ function CorrectPercentajeChart({ sessions, domain }){
             tooltip: tooltipOptions,
             datalabels: dataLabelOptions,
             title: titleOptions,
+            legend: legendOptions,
         },
   };
 

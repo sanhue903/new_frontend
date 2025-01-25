@@ -4,7 +4,7 @@ import ChapterFilterSelect from "../filters/ChapterFilterSelect";
 
 
 const ManageFilter = (sessions, choice, filter) => {
-    if (choice === 'no') {
+    if (choice === 'todas') {
         return sessions;
     }
     return sessions.filter(session => session[filter] == choice);
@@ -18,7 +18,7 @@ function StudentFilterContainer({ mobileAppData , allSessions, studentSessions ,
 
     useEffect(() => {
         if (mobileAppData !== null) {
-            if (chapterChoice === 'no') {
+            if (chapterChoice === 'todas') {
                 handleDomain(mobileAppData)
                 return;
             }

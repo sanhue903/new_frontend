@@ -24,7 +24,7 @@ function SessionFilterSelect({ sessions , handleChoice }) {
 
     useEffect(() => {
         if (sessions != null) {
-            handleValue('no');
+            handleValue('todas');
 
             let maxValue = getMaxNumberSession(sessions);
             handleOptions(getOptions(maxValue));
@@ -40,10 +40,10 @@ function SessionFilterSelect({ sessions , handleChoice }) {
 
     return (
         <div>
-        <label htmlFor="chapter-select">Selecciona un sesion:</label>
+        <label htmlFor="chapter-select">Sesión: </label>
         <select id="chapter-select" value={value} onChange={(e) => handleValue(e.target.value)}>
             {/* Opción predeterminada */}
-            <option value="no">No</option>
+            <option value="todas">todas</option>
             {/* Renderizar opciones solo si chapters no es null/undefined */}
             {options.map((number) => (
                 <option key={number} value={number}>
