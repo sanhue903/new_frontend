@@ -1,8 +1,7 @@
 import '../css/Students.css'
 import React, {useState, useEffect} from 'react'
 import NavBar from '../components/NavBar'
-import StudentsTable from '../components/mainView/StudentsTable'
-import MainScoreChartContainer from '../components/mainView/MainScoreChartContainer'
+import MainChartContainer from '../components/mainView/MainChartContainer'
 
 import { fetchAppMobileData, fetchAllSessionsData, fetchAllStudentsData } from '../services/apiServices';
 
@@ -26,7 +25,6 @@ const setData = async (fetchFunction, handleData) => {
 function MainView() {
     const [mobileAppData, handleMobileAppData] = useState(null);
     const [sessions, handleSessions] = useState(null);
-
     const [students, handleStudents] = useState(null);
 
     useEffect(() => {
@@ -44,8 +42,8 @@ function MainView() {
   return (
     <div>
       <NavBar />
-      <MainScoreChartContainer mobileAppData = {mobileAppData} sessions = {sessions}/>
-      <StudentsTable students = {students} />
+        <h1>El Botiquín de las Emociones</h1>
+      <MainChartContainer mobileAppData = {mobileAppData} students={students} sessions = {sessions}/>
     </div>
   )
 }

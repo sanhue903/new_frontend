@@ -53,7 +53,7 @@ function StudentFilterContainer({ mobileAppData , allSessions, studentSessions ,
     }, [filteredStudentSessions, sessionChoice]);
 
     return (
-        <div className="filter-container">
+        <div className="filters-container">
             <ChapterFilterSelect
                 mobileAppData={mobileAppData} 
                 handleDomain={handleDomain} 

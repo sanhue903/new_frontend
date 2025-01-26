@@ -78,37 +78,46 @@ function StudentScoresTable({ mobileAppData , sessions }) {
             </tr>
             </thead>
             <tbody>
-            {actualScores.length > 0 ? (
-                actualScores.map((score, index) => {
-                    const chapter = mobileAppData.chapters.find(ch => ch.questions.some(q => q.id === score.question_id));
-                    const question = chapter?.questions.find(q => q.id === score.question_id);
-                    const session = sessions.find(s => s.id === score.session_id);
+    {actualScores.length > 0 ? (
+        actualScores.map((score, index) => {
+            const chapter = mobileAppData.chapters.find(ch => ch.questions.some(q => q.id === score.question_id));
+            const question = chapter?.questions.find(q => q.id === score.question_id);
+            const session = sessions.find(s => s.id === score.session_id);
 
-                    return (
-                        <tr key={index} className={'table-row-' + (index % 2 === 0 ? 'even' : 'odd')}>
-                            <td className='text' style={{ width: '10%' }}>{chapter?.name || 'N/A'}</td>
-                            <td className='text' style={{ width: '35%' }}>{question?.text || 'N/A'}</td>
-                            <td className='text' style={{ width: '30%' }}>{score.answer}</td>
-                            <td className='noText' style={{ width: '5%' }}>{session?.number || 'N/A'}</td>
-                            <td className='text' style={{ width: '5%' }}>{formatDate(session?.date) || 'N/A'}</td>
-                            <td className='noText' style={{ width: '5%' }}>{score.seconds.toFixed(2)}</td>
-                            <td className='noText' style={{ width: '5%' }}>{score.attempt}</td>
-                            <td className='noText' style={{ width: '5%' }}>
-                                {score.is_correct ? (
-                                    <img src={tick} alt="Sí" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />
-                                ) : (
-                                    <img src={x} alt="No" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />
-                                )}
-                            </td>
-                        </tr>
-                    );
-                })
-            ) : (
-                <tr>
-                    <td colSpan="7" style={{ textAlign: 'center', padding: '10px' }}>No hay datos disponibles</td>
+            return (
+                <tr key={index} className={'table-row-' + (index % 2 === 0 ? 'even' : 'odd')}>
+                    <td className='text' style={{ width: '10%' }}>{chapter?.name || 'N/A'}</td>
+                    <td className='text' style={{ width: '35%' }}>{question?.text || 'N/A'}</td>
+                    <td className='text' style={{ width: '30%' }}>{score.answer}</td>
+                    <td className='noText' style={{ width: '5%' }}>{session?.number || 'N/A'}</td>
+                    <td className='text' style={{ width: '5%' }}>{formatDate(session?.date) || 'N/A'}</td>
+                    <td className='noText' style={{ width: '5%' }}>{score.seconds.toFixed(2)}</td>
+                    <td className='noText' style={{ width: '5%' }}>{score.attempt}</td>
+                    <td className='noText' style={{ width: '5%' }}>
+                        {score.is_correct ? (
+                            <img src={tick} alt="Sí" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />
+                        ) : (
+                            <img src={x} alt="No" style={{ width: '33px', height: '33px', paddingTop: '5px' }} />
+                        )}
+                    </td>
                 </tr>
-            )}
-            </tbody>
+            );
+        })
+    ) : (
+        <tr>
+            {/* 🔹 Ajustamos el `colSpan` para que ocupe toda la fila */}
+            <td colSpan="8" style={{ 
+                textAlign: 'center', 
+                padding: '15px', 
+                fontSize: '16px', 
+                fontWeight: 'bold', 
+                color: '#666' 
+            }}>
+                No hay datos disponibles
+            </td>
+        </tr>
+    )}
+</tbody>
         </table>
         <div>
             <button onClick={previousPage} disabled={page == 1}>&lt;</button>

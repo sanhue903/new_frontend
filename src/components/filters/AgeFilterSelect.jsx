@@ -1,46 +1,34 @@
 import React, {useState , useEffect} from 'react';
 
-const getOptions = (maxValue) => {
-    const options = [];
-
-    for (var i = 1; i <= maxValue;i++) {
-        options.push(i);
-    }
+const getOptions = (students) => {
+    
+    const options = [...new Set(students.map(item => item.age).sort())];
 
     return options;
 };
 
-const getMaxNumberSession = (sessions) => {
-    let maxValue = sessions.reduce(
-        (prev, current) => current.number > prev.number ? current : prev, 
-        {number: 0}).number
-
-    return maxValue;
-}
-
-function SessionFilterSelect({ sessions , handleChoice }) {
+function AgeFilterSelect({ students , handleChoice }) {
     const [options, handleOptions] = useState([]);
     const [value, handleValue] = useState('');
 
     useEffect(() => {
-        if (sessions != null) {
+        if (students !== null) {
             handleValue('todas');
 
-            let maxValue = getMaxNumberSession(sessions);
-            handleOptions(getOptions(maxValue));
+            handleOptions(getOptions(students));
         }
-    }, [sessions]);
+    }, [students]);
 
     useEffect(() => {
-        if (sessions != null) {
-            console.log('Session filter: ' + value)
+        if (students !== null) {
+            console.log('Age filter: ' + value)
             handleChoice(value);
         }
-    }, [sessions, value]);
+    }, [students, value]);
 
     return (
         <div className='filter-container'>
-        <label htmlFor="chapter-select">Sesión: </label>
+        <label htmlFor="chapter-select">Edad: </label>
         <select id="chapter-select" value={value} onChange={(e) => handleValue(e.target.value)}>
             {/* Opción predeterminada */}
             <option value="todas">todas</option>
@@ -55,4 +43,4 @@ function SessionFilterSelect({ sessions , handleChoice }) {
     );
 }
 
-export default SessionFilterSelect;
+export default AgeFilterSelect;

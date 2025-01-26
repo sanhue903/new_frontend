@@ -150,6 +150,9 @@ function MeanChart({ domain, barSessions, lineSessions }) {
                 if (context[0].dataset.type !== 'line') {
                     return `Total: ${barData[context[0].dataIndex]?.populationSize || 0}`;
                 }
+                else {
+                    return ''
+                }
             },
             label: (context) => {
                 let index = context.dataIndex;
@@ -238,8 +241,8 @@ function MeanChart({ domain, barSessions, lineSessions }) {
 
 
     return (
-        <div className='chart-container'>
-            <div>
+        <div>
+            <div className='mean-choices-container'>
                 <label>
                     <input
                         type='radio'
@@ -261,7 +264,7 @@ function MeanChart({ domain, barSessions, lineSessions }) {
                     Intentos
                 </label>
             </div>   
-            <div>
+            <div className='chart-container'>
                 <Bar data={dataChart} options={optionsChart} width={400} height={300}/>
             </div>
         </div>

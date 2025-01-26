@@ -1,20 +1,24 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import CorrectPercentajeChart from "../charts/CorrectPercentajeChart";
 import MeanChart from "../charts/MeanChart";
 import SessionChart from "../charts/SessionChart";
 import MainFilterContainer from "./MainFilterContainer";
+import StudentsTable from "./StudentsTable";
 
 
 
-function MainScoreChartContainer({ mobileAppData , sessions }){
+function MainChartContainer({ mobileAppData , students , sessions }){
     const [input, handleInput] = useState(null);
     const [domain, handleDomain] = useState(null);
+    const [studentsInput, handleStudentsInput] = useState(null);
 
     return (
         <div>
             <MainFilterContainer 
             mobileAppData={mobileAppData} 
             sessions={sessions}
+            students={students}
+            handleStudentsInput={handleStudentsInput}
             handleInput={handleInput}
             handleDomain={handleDomain}
             /> 
@@ -23,8 +27,9 @@ function MainScoreChartContainer({ mobileAppData , sessions }){
                 <CorrectPercentajeChart sessions={input} domain={domain}/>
                 <MeanChart barSessions={input} domain={domain}/>
             </div>
+            <StudentsTable students = {studentsInput} sessions={sessions} />
         </div>
     );
 }
 
-export default MainScoreChartContainer;
+export default MainChartContainer;

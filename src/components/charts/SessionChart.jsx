@@ -28,7 +28,6 @@ function SessionChart({ sessions }){
     useEffect(() => {
         if (sessions != null) {
             handleData(calculateData(sessions));
-            console.debug(data);
         }
     }, [sessions]);
 

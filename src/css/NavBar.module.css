@@ -1,8 +1,8 @@
 .NavBar {
-    background-color: #bbbbbb;
-    height: 60px;
+    background-color: #f3f3f3;
+    height: 40px;
     width: 100%;
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }

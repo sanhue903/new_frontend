@@ -20,7 +20,7 @@ function ChapterFilterSelect({ mobileAppData , handleChoice }) {
     }, [value]);
 
     return (
-        <div>
+        <div className='filter-container'>
         <label htmlFor="chapter-select">Dimensión : </label>
         <select id="chapter-select" onChange={(e) => handleChoice(e.target.value)}>
             {/* Opción predeterminada */}

@@ -12,7 +12,7 @@ function LogoutButton() {
 
     return (
         <div className='logout'>
-            <img src={logoutImage} alt="Logout" onClick={logout} />
+            <img src={logoutImage} width={'30px'} height={'30px'} alt="Logout" onClick={logout} />
         </div>
     );
 }
