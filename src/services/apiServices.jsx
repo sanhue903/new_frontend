@@ -4,6 +4,20 @@ const callInit = {
     credentials: 'include',
 };
 
+export const fetchRegister = async (_email, _password, _confirm_password) => {
+
+    const response = await fetch(`${apiBaseUrl}/auth/signup/`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email: _email, password: _password, confirm_password: _confirm_password})
+    })
+
+    return response
+}
+
 export const fetchLogin = async (_email, _password) => {
 
     const response = await fetch(`${apiBaseUrl}/auth/login/`, {

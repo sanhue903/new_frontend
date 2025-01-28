@@ -3,6 +3,7 @@ import Login from './views/Login';
 import MainView from './views/MainView';
 import ProtectedRoute from './components/ProtectedRoute';
 import StudentView from './views/StudentView';
+import Register from './views/Register'
 import './App.css';
 
 function App() { 
@@ -11,6 +12,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path='/register' element={<Register/>} />
       <Route path="/students" element={<ProtectedRoute><MainView /></ProtectedRoute>} />
       <Route path="/students/:studentId/scores" element={<ProtectedRoute><StudentView /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/login" />} />
