@@ -53,6 +53,10 @@ function SessionChart({ sessions }){
         }
 
     const tooltipOptions = {
+        position: "nearest",
+        yAlign: "bottom", // 🔹 Posiciona el tooltip más abajo para evitar que cubra el datalabel
+        xAlign: "center",
+        caretPadding: 10,
         callbacks: {
             title: (context) => {
                 return 'Total: ' + data.total;
