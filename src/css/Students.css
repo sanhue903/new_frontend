@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+h3 {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.table {
+    background-color: #f3f3f3;
+    flex-direction: column;
+    display: flex;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.table th {
+    padding: 1rem;
+    text-align: center;
+}
+
+.table td.noText {
+    text-align: center;
+    font-size: small;
+}
+
+.table td.text {
+    padding-left: 10px;
+    text-align: justify;
+    font-size: small;
+    line-height: 1;
+}
+
+.table tr {
+    height: 45px;
+}
+
+.table-row-odd {
+    background-color: #fff;
+}
+
+.table-row-even {
+    background-color: #f0f0f0;
+}
+
+.table div {
+    display: flex;
+    justify-content: center;
+}
+
+.chart-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.charts-container{
+    display: flex;
+    justify-content: space-around;
+    padding: 0 8rem;
+    gap: 10px;
+}
+
+.logout {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    margin-right: 0.5rem;
+    margin-top: 0.3rem;
+    cursor: pointer;
+}
+
+.studentInfoContainer{
+    background-color: #f3f3f3;
+    width: 85.9%;
+    height: 20px;
+    margin: auto;
+    margin-bottom: 1px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    justify-content: space-between;
+    display: flex;
+    padding: 10px;
+}
+
+.column{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 📌 Contenedor principal de los filtros */
+.filters-container {
+    width: 85%; /* 🔹 Ocupa el 90% del ancho de la pantalla */
+    margin: 0 auto; /* 🔹 Lo centra horizontalmente */
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: start; /* 🔹 Asegura que los filtros estén en el centro */
+    align-items: start;
+    gap: 10px; /* 🔹 Reduce el espacio entre los filtros */
+    padding: 8px 15px; /* 🔹 Reduce la altura de la caja */
+    background-color: #f3f3f3;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 📌 Estilo individual para cada filtro */
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* 🔹 Reduce el espacio entre la etiqueta y el select */
+}
+
+/* 📌 Etiqueta de los filtros */
+.filter-container label {
+    font-size: 11px; /* 🔹 Reduce el tamaño del texto */
+    font-weight: bold;
+    color: #333;
+}
+
+/* 📌 Select box */
+.filter-container select {
+    font-size: 11px; /* 🔹 Reduce el tamaño del texto */
+    padding: 4px 8px; /* 🔹 Reduce la altura del select */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* 🔹 Cambios al pasar el mouse */
+.filter-container select:hover {
+    border-color: #007bff;
+}
+
+/* 🔹 Efecto cuando está enfocado */
+.filter-container select:focus {
+    border-color: #0056b3;
+    box-shadow: 0px 0px 4px rgba(0, 91, 187, 0.5);
+}
+
+.mean-choices-container {
+    font-size: 11px;
+    margin-bottom: 0px;
+    height: 20px;
+    padding-left: 30px;
+}
